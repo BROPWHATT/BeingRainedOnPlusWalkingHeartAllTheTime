@@ -29,9 +29,9 @@ MOVE_DELTA = 5
 fonts = pygame.sysfont.get_fonts()
 emoji_font = [font for font in fonts if "emoji" in font][0]
 
-# title
-title_font = pygame.font.SysFont("Microsoft YaHei", 25)
-title_text = title_font.render("淋雨+一直走心", True, BLUE)
+# title ####changed for testing####
+title_font = pygame.font.SysFont(None, 25)
+title_text = title_font.render("123", True, BLUE)
 
 # Heart image
 heart_pos = [WIDTH // 2, HEIGHT // 2]
