@@ -2,7 +2,6 @@ import pygame
 from pygame_widgets.slider import Slider
 import pygame_widgets
 
-import sys
 import random
 import asyncio
 
@@ -117,7 +116,7 @@ async def main():
         screen.blit(title_text, (WIDTH // 2 - 75, 10))
 
         # Cap the frame rate
-        pygame.time.Clock().tick(60)
+        # pygame.time.Clock().tick(60)
         pygame.display.update()
         pygame_widgets.update(events)
 
