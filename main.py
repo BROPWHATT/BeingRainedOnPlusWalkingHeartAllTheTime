@@ -123,10 +123,6 @@ async def main():
 
         await asyncio.sleep(0.0)
 
-    # Quit Pygame
-    pygame.quit()
-    sys.exit()
-
 
 if __name__ == "__main__":
     asyncio.run(main())
