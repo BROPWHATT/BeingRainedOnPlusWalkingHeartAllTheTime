@@ -4,6 +4,7 @@ import pygame_widgets
 
 import sys
 import random
+import asyncio
 
 # Initialize Pygame
 pygame.init()
@@ -44,80 +45,87 @@ heart_rect.center = (WIDTH // 2, HEIGHT // 2)
 rain_size = 0
 rain_speed = 0
 rain_pos = []
-MAX_RAIN_SIZE = 100
+MAX_RAIN_SIZE = 70
 slider_rainsize = Slider(screen, 100, 50, 600, 10, min=5, max=MAX_RAIN_SIZE, step=1)
 
 # Main game loop
-running = True
-while running:
-    screen.fill(WHITE)
-    screen.blit(background, (0, 0))
-    events = pygame.event.get()
-    
-    # Handle events
-    for event in events:
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                key_ev[0] = 1
-            if event.key == pygame.K_s:
-                key_ev[1] = 1
-            if event.key == pygame.K_a:
-                key_ev[2] = 1
-            if event.key == pygame.K_d:
-                key_ev[3] = 1
+async def main():
+    running = True
+    while running:
+        screen.fill(WHITE)
+        screen.blit(background, (0, 0))
+        events = pygame.event.get()
         
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                key_ev[0] = 0
-            if event.key == pygame.K_s:
-                key_ev[1] = 0
-            if event.key == pygame.K_a:
-                key_ev[2] = 0
-            if event.key == pygame.K_d:
-                key_ev[3] = 0
+        # Handle events
+        for event in events:
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    key_ev[0] = 1
+                if event.key == pygame.K_s:
+                    key_ev[1] = 1
+                if event.key == pygame.K_a:
+                    key_ev[2] = 1
+                if event.key == pygame.K_d:
+                    key_ev[3] = 1
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    key_ev[0] = 0
+                if event.key == pygame.K_s:
+                    key_ev[1] = 0
+                if event.key == pygame.K_a:
+                    key_ev[2] = 0
+                if event.key == pygame.K_d:
+                    key_ev[3] = 0
 
-    # Update heart position
-    if key_ev[0]:
-        heart_rect.centery -= MOVE_DELTA
-    if key_ev[1]:
-        heart_rect.centery += MOVE_DELTA
-    if key_ev[2]:
-        heart_rect.centerx -= MOVE_DELTA
-    if key_ev[3]:
-        heart_rect.centerx += MOVE_DELTA
-    
-    rain_speed = 5 + slider_rainsize.getValue() / 10
-    rain_size = slider_rainsize.getValue()
+        # Update heart position
+        if key_ev[0]:
+            heart_rect.centery -= MOVE_DELTA
+        if key_ev[1]:
+            heart_rect.centery += MOVE_DELTA
+        if key_ev[2]:
+            heart_rect.centerx -= MOVE_DELTA
+        if key_ev[3]:
+            heart_rect.centerx += MOVE_DELTA
+        
+        rain_speed = 5 + slider_rainsize.getValue() / 10
+        rain_size = slider_rainsize.getValue()
 
-    # Update rain
-    rain_pos.append([random.randint(0, WIDTH), 0])
-    for drop in rain_pos[:]:
-        drop[1] += rain_speed
-        if drop[1] > HEIGHT:
-            rain_pos.remove(drop)
+        # Update rain
+        rain_pos.append([random.randint(0, WIDTH), 0])
+        for drop in rain_pos[:]:
+            drop[1] += rain_speed
+            if drop[1] > HEIGHT:
+                rain_pos.remove(drop)
 
-    # Draw rain
-    for drop in rain_pos:
-        pygame.draw.line(screen, BLUE, drop, (drop[0], drop[1] + rain_size), 2)
+        # Draw rain
+        for drop in rain_pos:
+            pygame.draw.line(screen, BLUE, drop, (drop[0], drop[1] + rain_size), 2)
 
-    # Draw heart
-    screen.blit(heart_img, heart_rect)
+        # Draw heart
+        screen.blit(heart_img, heart_rect)
 
-    # Check if heart stops to cry
-    if rain_size > 80:
-        crying_text = pygame.font.SysFont(emoji_font, 25).render("😢", True, RED)
-        screen.blit(crying_text, (heart_rect.centerx - 17, heart_rect.centery-12))
+        # Check if heart stops to cry
+        if rain_size > MAX_RAIN_SIZE * 0.7:
+            crying_text = pygame.font.SysFont(emoji_font, 25).render("😢", True, RED)
+            screen.blit(crying_text, (heart_rect.centerx - 17, heart_rect.centery-12))
 
-    slider_rainsize.draw()
-    screen.blit(title_text, (WIDTH // 2 - 75, 10))
+        slider_rainsize.draw()
+        screen.blit(title_text, (WIDTH // 2 - 75, 10))
 
-    # Cap the frame rate
-    pygame.time.Clock().tick(60)
-    pygame.display.update()
-    pygame_widgets.update(events)
+        # Cap the frame rate
+        pygame.time.Clock().tick(60)
+        pygame.display.update()
+        pygame_widgets.update(events)
 
-# Quit Pygame
-pygame.quit()
-sys.exit()
+        await asyncio.sleep(0.0)
+
+    # Quit Pygame
+    pygame.quit()
+    sys.exit()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
