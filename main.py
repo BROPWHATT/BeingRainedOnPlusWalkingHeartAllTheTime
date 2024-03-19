@@ -50,6 +50,7 @@ slider_rainsize = Slider(screen, 100, 50, 600, 10, min=5, max=MAX_RAIN_SIZE, ste
 
 # Main game loop
 async def main():
+    global key_ev, rain_size, rain_speed, rain_pos, slider_rainsize, heart_rect, screen, background, title_text, heart_img, emoji_font, WIDTH, HEIGHT, WHITE, RED, BLUE, MOVE_DELTA, fonts, title_font, MAX_RAIN_SIZE, events, running, heart_pos, rain_pos
     running = True
     while running:
         screen.fill(WHITE)
